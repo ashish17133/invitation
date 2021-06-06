@@ -7,38 +7,12 @@ import 'package:invitation/database/database.dart';
 
 Daaatabase dbmain = Daaatabase();
 var value;
+bool changedatabase = false;
 //Edited name passer
 EditPerson editedperson = EditPerson();
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await dbmain.initialize();
-  //delete syntax goes like this
-  //Daaatabase.deletee("Ashish Dhakal");
-
-  //insert syntax goes like this
-  // await Daaatabase.inseert(Person(
-  //     id: "",
-  //     name: "Ghanashyam Dhakal",
-  //     number: "9845897016",
-  //     address: "Simara,Bara",
-  //     status: "Yes"));
-
-  //getting data goes like this
-  value = await Daaatabase.getdata();
-  for (int i = 0; i <= value.length - 1; i++) {
-    print(value[i].name);
-    print(value[i].address);
-    print(value[i].id);
-    print(value[i].number);
-    print(value[i].status);
-  }
-  //getting data code upto here
-
-  //updating code goes like this
-  Daaatabase.update(
-      "Ghanashyam", "Alish", "simara-chittu-house", "9845778096", "Yes");
-
+  await initialFunctions();
   runApp(MaterialApp(home: MyApp(), debugShowCheckedModeBanner: false));
 }
 
@@ -52,6 +26,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    checkdatachange().then((value) {
+      setState(() {});
+    });
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -87,13 +65,8 @@ class Items extends StatelessWidget {
     return ListView.builder(
         itemCount: value.length,
         itemBuilder: (context, index) {
-          editedperson.name = value[index].name;
-          editedperson.address = value[index].address;
-          editedperson.number = value[index].number;
-          editedperson.status = value[index].status;
-
           return Container(
-            height: 120,
+            height: 150,
             child: Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
@@ -148,9 +121,19 @@ class Items extends StatelessWidget {
                             ),
                           ],
                         )),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
                         Expanded(
                             child: IconButton(
                           onPressed: () {
+                            editedperson.name = value[index].name;
+                            editedperson.address = value[index].address;
+                            editedperson.number = value[index].number;
+                            editedperson.status = value[index].status;
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
                               return Screen3();
@@ -158,6 +141,16 @@ class Items extends StatelessWidget {
                           },
                           icon: Icon(Icons.edit),
                         )),
+                        Expanded(
+                          child: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () async {
+                              await Daaatabase.deletee("${value[index].name}");
+
+                              changedatabase = true;
+                            },
+                          ),
+                        )
                       ],
                     )
                   ],
@@ -166,5 +159,46 @@ class Items extends StatelessWidget {
             ),
           );
         });
+  }
+}
+
+Future<void> initialFunctions() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dbmain.initialize();
+  //delete syntax goes like this
+  //Daaatabase.deletee("Alish Dhakal");
+
+  //insert syntax goes like this
+  // await Daaatabase.inseert(Person(
+  //     id: "",
+  //     name: "Ghanashyam Dhakal",
+  //     number: "98421898988989",
+  //     address: "Simara_AURAHA",
+  //     status: "YES"));
+
+  //updating code goes like this
+  //Daaatabase.update(
+  //    "Ghanashyam", "Alish", "simara-chittu-house", "9845778096", "Yes");
+
+  //getting database value;
+  await getdatabasevalue();
+}
+
+//get database value
+Future<void> getdatabasevalue() async {
+  value = await Daaatabase.getdata();
+  for (int i = 0; i <= value.length - 1; i++) {
+    print(value[i].name);
+    print(value[i].address);
+    print(value[i].id);
+    print(value[i].number);
+    print(value[i].status);
+  }
+}
+
+Future<void> checkdatachange() async {
+  if (changedatabase == true) {
+    getdatabasevalue();
+    changedatabase = false;
   }
 }

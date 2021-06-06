@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:invitation/main.dart';
+import 'package:invitation/model/people.dart';
+import 'package:invitation/database/database.dart';
 
-String input_name, input_address, input_number;
+String input_name, input_address, input_number, input_status;
 
 class Screen1 extends StatefulWidget {
   Screen1({Key key}) : super(key: key);
@@ -109,15 +112,44 @@ class _Screen1State extends State<Screen1> {
                                     borderRadius: BorderRadius.circular(18)),
                               ),
                             ),
+                            SizedBox(height: 10),
+                            TextField(
+                              onChanged: (value) {
+                                input_status = value;
+                              },
+                              decoration: InputDecoration(
+                                hintText: "Visiting Status(Yes or No)",
+                                filled: true,
+                                fillColor: Colors.white,
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.red, width: 2),
+                                    borderRadius: BorderRadius.circular(18)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.red, width: 2),
+                                    borderRadius: BorderRadius.circular(18)),
+                              ),
+                            ),
                             Padding(
-                              padding: const EdgeInsets.all(40.0),
+                              padding: const EdgeInsets.all(15.0),
                               child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     primary: Colors.green,
                                     elevation: 10.0,
                                   ),
-                                  onPressed: () {
+                                  onPressed: () async {
                                     //code for saving and all
+                                    await Daaatabase.inseert(Person(
+                                        id: "",
+                                        name: input_name,
+                                        number: input_number,
+                                        address: input_address,
+                                        status: input_status));
+                                    setState(() {
+                                      changedatabase = true;
+                                    });
+                                    print("data saved");
                                   },
                                   child: Text(
                                     "SAVE",

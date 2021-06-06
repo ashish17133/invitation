@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:invitation/database/database.dart';
+import 'package:invitation/main.dart';
 import 'package:invitation/model/people.dart';
+
+import 'database/database.dart';
 
 //editing the value from here
 EditPerson editedperson = EditPerson();
+
+//catch person name for change;
+String originalname;
 
 class Screen3 extends StatefulWidget {
   Screen3({Key key}) : super(key: key);
@@ -14,6 +21,9 @@ class Screen3 extends StatefulWidget {
 class _Screen3State extends State<Screen3> {
   @override
   Widget build(BuildContext context) {
+    originalname = editedperson.name;
+    print(originalname);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -22,6 +32,9 @@ class _Screen3State extends State<Screen3> {
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.pop(context);
+              setState(() {
+                changedatabase = true;
+              });
             },
           ),
           title: Text("Edit Windows"),
@@ -47,6 +60,7 @@ class _Screen3State extends State<Screen3> {
                             hintText: "${editedperson.name}"),
                         onChanged: (value) {
                           editedperson.name = value;
+                          print("${editedperson.name}");
                         },
                       ),
                       TextField(
@@ -56,6 +70,7 @@ class _Screen3State extends State<Screen3> {
                             hintText: "${editedperson.address}"),
                         onChanged: (value) {
                           editedperson.address = value;
+                          print("${editedperson.address}");
                         },
                       ),
                       TextField(
@@ -65,6 +80,7 @@ class _Screen3State extends State<Screen3> {
                               hintText: "${editedperson.number}"),
                           onChanged: (value) {
                             editedperson.number = value;
+                            print("${editedperson.number}");
                           }),
                       TextField(
                         decoration: InputDecoration(
@@ -73,14 +89,24 @@ class _Screen3State extends State<Screen3> {
                             hintText: "${editedperson.status}"),
                         onChanged: (value) {
                           editedperson.status = value;
+                          print("${editedperson.status}");
                         },
                       ),
                       SizedBox(
                         height: 20,
                       ),
                       ElevatedButton(
-                          onPressed: () {
-                            print("update code here");
+                          onPressed: () async {
+                            await Daaatabase.update(
+                                originalname,
+                                editedperson.name,
+                                editedperson.address,
+                                editedperson.number,
+                                editedperson.status);
+                            setState(() {
+                              changedatabase = true;
+                            });
+                            print("Status update code here");
                           },
                           child: Text("Update"))
                     ],
