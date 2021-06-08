@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:invitation/database/database.dart';
 import 'package:invitation/edit_page.dart';
 import 'package:invitation/model/people.dart';
+import 'package:invitation/setting.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'adding_name.dart';
 import 'package:invitation/database/database.dart';
 
@@ -36,6 +38,14 @@ class _MyAppState extends State<MyApp> {
         backgroundColor: Colors.green,
         actions: [
           IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return Screen4();
+              }));
+            },
+            icon: Icon(Icons.settings),
+          ),
+          IconButton(
               icon: Icon(
                 Icons.add,
                 color: Colors.amber,
@@ -59,7 +69,29 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class Items extends StatelessWidget {
+class Items extends StatefulWidget {
+  @override
+  _ItemsState createState() => _ItemsState();
+}
+
+class _ItemsState extends State<Items> {
+  @override
+  void initState() {
+    getpref();
+    super.initState();
+  }
+
+  bool showphonevalue = true;
+  Future<void> getpref() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    showphonevalue = prefs.getBool("phonepref") ?? true;
+
+    if (showphonevalue == null) {
+      showphonevalue = true;
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -101,9 +133,12 @@ class Items extends StatelessWidget {
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16)),
-                              Text(
-                                "${value[index].number}",
-                                style: TextStyle(fontSize: 12),
+                              Visibility(
+                                visible: showphonevalue,
+                                child: Text(
+                                  "${value[index].number}",
+                                  style: TextStyle(fontSize: 12),
+                                ),
                               ),
                             ],
                           ),
