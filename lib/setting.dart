@@ -20,18 +20,21 @@ class _Screen4State extends State<Screen4> {
   Future<void> getpref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     showphonevalue = prefs.getBool("phonepref") ?? true;
-    setState(() {});
-
-    if (showphonevalue == null) {
-      showphonevalue = true;
-    }
+    print(showphonevalue);
+    setState(() {
+      if (showphonevalue == null) {
+        showphonevalue = true;
+      }
+    });
   }
 
   Future<void> setpref(bool prefvalue) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool("phonepref", prefvalue);
-    showphonevalue = prefvalue;
-    setState(() {});
+    print(prefvalue);
+    setState(() {
+      showphonevalue = prefvalue;
+    });
   }
 
   @override

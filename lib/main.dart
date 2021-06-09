@@ -6,6 +6,7 @@ import 'package:invitation/setting.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'adding_name.dart';
 import 'package:invitation/database/database.dart';
+import 'setting.dart';
 
 Daaatabase dbmain = Daaatabase();
 var value;
@@ -85,11 +86,11 @@ class _ItemsState extends State<Items> {
   Future<void> getpref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     showphonevalue = prefs.getBool("phonepref") ?? true;
-
-    if (showphonevalue == null) {
-      showphonevalue = true;
-    }
-    setState(() {});
+    setState(() {
+      if (showphonevalue == null) {
+        showphonevalue = true;
+      }
+    });
   }
 
   @override
